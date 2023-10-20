@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>Archives | 苦叶的小窝</title>
+    <title>分类 | 苦叶的小窝</title>
     <meta name="author" content="dats苦叶" />
     <meta name="description" content="The things we love are the driving force on the road to success" />
     <meta name="keywords" content="" />
@@ -31,6 +31,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -144,58 +148,32 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            
-<div id="archives">
-    
-    <div id="timeline-wrap" ref="timeline">
+            <div class="article">
+    <div>
+        <h1>分类</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/10/20
+        </span>
         
-        <div class="timeline" data-title="您好，倾听者">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2023/10/10</div>
-                <a href="/2023/10/10/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E5%80%BE%E5%90%AC%E8%80%85/">
-                    <h3>您好，倾听者</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/%E6%97%A5%E5%B8%B8/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            日常
-                        </a>
-                    </span>
-                    
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline" data-title="vm虚拟本地游戏运行测试">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2023/10/14</div>
-                <a href="/2023/10/14/VM%E6%9C%AC%E5%9C%B0%E8%99%9A%E6%8B%9F%E6%B8%B8%E6%88%8FGM%E7%9C%9F%E7%AB%AF/">
-                    <h3>VM虚拟本地游戏运行测试</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/%E6%96%87%E6%A1%A3/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            文档
-                        </a>
-                    </span>
-                    
-                    
-                </div>
-            </div>
-        </div>
         
     </div>
+    
+    <div class="content" v-pre>
+        <p>为了方便文章的分类，新增加了一个分类栏喵~<br>分类栏的用法如下：<br>    <img src="/source%5Ccategories%5C%E7%A4%BA%E4%BE%8B1.jpg" alt="示例"><br>点击任意文章的角标即可看到分类栏，非常方便！</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
 </div>
 
             <footer id="footer">
@@ -226,6 +204,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>
