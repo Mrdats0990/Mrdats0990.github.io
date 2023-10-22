@@ -176,189 +176,318 @@
         <p>最近在做Android APP商品页面操作模块<br>下面是实现过程和一些心得总结：</p>
 <p>工程结构：<br>[.kt]<br>MainActivity<br>Account<br>AccountAdapter<br>AcountDao<br>DataBaseHelper<br>[.xml]<br>activity_main<br>listview_item<br>look_account<br>update_account</p>
 <p>一.适配器Adapter【AccountAdapter.kt】<br>自定义的账户适配器类，用于在ListView中显示账户信息。适配器继承自BaseAdapter类，并重写了一些必要的方法。<br>在构造方法中，需要传入上下文Context和账户列表accountList。<br>重写的方法包括：<br>getCount(): 返回账户列表的数量。<br>getItem(): 根据指定位置返回对应的账户对象。<br>getItemId(): 根据指定位置返回对应的账户ID。<br>getView(): 根据指定位置创建或复用一个列表项的View，并为View设置账户的相关信息。同时，为列表项中的按钮设置点击事件监听器。<br>此外，适配器还定义了一些辅助方法：<br>deleteAccount(): 删除指定位置的账户，并更新数据源和视图。<br>raiseAccount(): 在指定位置的账户的余额上加1，并更新数据源和视图。<br>lowerAccount(): 在指定位置的账户的余额上减1，并更新数据源和视图。<br>值得注意的是，在代码中使用了AlertDialog来显示删除确认对话框，用户可以选择确认删除或取消操作。<br>在适配器中还引用了AccountDao类，用于操作账户数据的增删改查。可以根据具体需求实现其相关方法来完成数据的持久化操作。</p>
-<p>相关代码：<br>class AccountAdapter (var content:Context,var accountList:MutableList<Account>): BaseAdapter() {<br>    lateinit var dao:AccountDao<br>    override fun getCount(): Int {<br>        return accountList.size<br>    }</p>
-<pre><code>override fun getItem(p0: Int): Any &#123;
-    return accountList.get(p0)
-&#125;
-
-override fun getItemId(p0: Int): Long &#123;
-    return p0.toLong()
-&#125;
-
-override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View &#123;
-    var view:View
-    if(p1==null)&#123;
-        view=LayoutInflater.from(content).inflate(R.layout.listview_item ,null)
-    &#125;else&#123;
-        view=p1
+<p>相关代码：</p>
+<pre><code class="kotlin">
+class AccountAdapter (var content:Context,var accountList:MutableList&lt;Account&gt;): BaseAdapter() &#123;
+    lateinit var dao:AccountDao
+    override fun getCount(): Int &#123;
+        return accountList.size
     &#125;
-    var account:Account=accountList.get(p0)
-    var tv_id:TextView
-    var tv_name:TextView
-    var tv_balance:TextView
-    var image_up:ImageView
-    var image_down:ImageView
-    var image_del:ImageView
-    tv_id=view.findViewById(R.id.tv_id_listview)
-    tv_name=view.findViewById(R.id.tv_name_listview)
-    tv_balance=view.findViewById(R.id.tv_balance_listview)
-    image_up= view.findViewById(R.id.image_up)
-    image_down=view.findViewById(R.id.image_down)
-    image_del=view.findViewById(R.id.image_delete)
-    tv_id.setText(account.id.toString())
-    tv_name.setText(account.name)
-    tv_balance.setText(account.balance.toString())
-    image_up.setOnClickListener &#123;raiseAccount(p0)&#125;
-    image_down.setOnClickListener &#123;lowerAccount(p0)&#125;
-    image_del.setOnClickListener &#123; deleteAccount(p0) &#125;
-    return view
-&#125;
-fun deleteAccount(id:Int)&#123;
-    var dialog:AlertDialog.Builder=AlertDialog.Builder(content)
-    var account=accountList[id]
-    dialog.setTitle(&quot;警告&quot;)
-    dialog.setIcon(R.mipmap.ic_launcher)
-    dialog.setMessage(&quot;你真的要删除吗？&quot;)
-    dialog.setPositiveButton(&quot;确定&quot;)&#123;dialogInterface,i-&gt;
-        dao=AccountDao(content)
-        var t:Int=dao.delete(account)
-        if (t&gt;0) &#123;
-            Toast.makeText(content, &quot;数据删除成功&quot;, Toast.LENGTH_LONG).show()
+
+    override fun getItem(p0: Int): Any &#123;
+        return accountList.get(p0)
+    &#125;
+
+    override fun getItemId(p0: Int): Long &#123;
+        return p0.toLong()
+    &#125;
+
+    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View &#123;
+        var view:View
+        if(p1==null)&#123;
+            view=LayoutInflater.from(content).inflate(R.layout.listview_item ,null)
         &#125;else&#123;
-            Toast.makeText(content, &quot;数据删除失败&quot;, Toast.LENGTH_LONG).show()
+            view=p1
         &#125;
-            accountList.remove(account)
-            notifyDataSetChanged()
+        var account:Account=accountList.get(p0)
+        var tv_id:TextView
+        var tv_name:TextView
+        var tv_balance:TextView
+        var image_up:ImageView
+        var image_down:ImageView
+        var image_del:ImageView
+        tv_id=view.findViewById(R.id.tv_id_listview)
+        tv_name=view.findViewById(R.id.tv_name_listview)
+        tv_balance=view.findViewById(R.id.tv_balance_listview)
+        image_up= view.findViewById(R.id.image_up)
+        image_down=view.findViewById(R.id.image_down)
+        image_del=view.findViewById(R.id.image_delete)
+        tv_id.setText(account.id.toString())
+        tv_name.setText(account.name)
+        tv_balance.setText(account.balance.toString())
+        image_up.setOnClickListener &#123;raiseAccount(p0)&#125;
+        image_down.setOnClickListener &#123;lowerAccount(p0)&#125;
+        image_del.setOnClickListener &#123; deleteAccount(p0) &#125;
+        return view
+    &#125;
+    fun deleteAccount(id:Int)&#123;
+        var dialog:AlertDialog.Builder=AlertDialog.Builder(content)
+        var account=accountList[id]
+        dialog.setTitle(&quot;警告&quot;)
+        dialog.setIcon(R.mipmap.ic_launcher)
+        dialog.setMessage(&quot;你真的要删除吗？&quot;)
+        dialog.setPositiveButton(&quot;确定&quot;)&#123;dialogInterface,i-&gt;
+            dao=AccountDao(content)
+            var t:Int=dao.delete(account)
+            if (t&gt;0) &#123;
+                Toast.makeText(content, &quot;数据删除成功&quot;, Toast.LENGTH_LONG).show()
+            &#125;else&#123;
+                Toast.makeText(content, &quot;数据删除失败&quot;, Toast.LENGTH_LONG).show()
+            &#125;
+                accountList.remove(account)
+                notifyDataSetChanged()
+            &#125;
+        dialog.setNegativeButton(&quot;取消&quot;)&#123;dialogInterface,i-&gt;
+
         &#125;
-    dialog.setNegativeButton(&quot;取消&quot;)&#123;dialogInterface,i-&gt;
+        dialog.show()
+    &#125;
+    fun raiseAccount(id:Int)&#123;
+        var account:Account=accountList.get(id)
+        dao= AccountDao(content)
+        account.balance=account.balance+1
+        var t:Int=dao.update(account)
+        notifyDataSetChanged()
+    &#125;
+    fun lowerAccount(id:Int)&#123;
+        var account:Account=accountList.get(id)
+        dao= AccountDao(content)
+        account.balance=account.balance-1
+        var t:Int=dao.update(account)
+        notifyDataSetChanged()
+    &#125;
+&#125;
+</code></pre>
+<p>二.数据访问层【AcountDao.kt】<br>用于对账户数据进行增删改查的操作。<br>在构造方法中，需要传入一个上下文Context对象，并初始化了数据库帮助类DataBaseHelper和账户列表accountList。<br>类中定义了一些方法，包括：<br>insert(): 向数据库中插入一个账户对象，通过ContentValues来设置账户的名称和余额，并返回插入后的账户ID。<br>getAllAccount(): 查询数据库中的所有账户数据，并将查询结果封装为一个Account对象列表。<br>update(): 更新数据库中指定账户的名称和余额。<br>delete(): 根据指定账户ID删除数据库中的对应账户。<br>lookAccountByName(): 根据指定名称模糊查询数据库中的账户数据，并返回符合条件的Account对象列表。<br>在每个操作方法中，都通过获取可读&#x2F;可写的数据库实例，在使用完毕后，需要及时关闭Cursor和数据库连接。</p>
+<p>相关代码：</p>
+<pre><code class="kotlin">
+class AccountDao (context: Context)&#123;
+    lateinit var accountList: MutableList&lt;Account&gt;
+    lateinit var db:SQLiteDatabase
+    lateinit var helper:DataBaseHelper
+    init &#123;
+        helper= DataBaseHelper(context)
+        accountList= mutableListOf()
+    &#125;
+    fun insert(account: Account)&#123;
+        db=helper.writableDatabase
+        val contentValue: ContentValues =ContentValues()
+        contentValue.put(&quot;name&quot;,account.name)
+        contentValue.put(&quot;balance&quot;,account.balance)
+        var id:Long = db.insert(&quot;account&quot;,null,contentValue)
+        account.id=id
+    &#125;
+    fun getAllAccount():MutableList&lt;Account&gt;&#123;
+        db=helper.readableDatabase
+        var account:Account
+        var cursor:Cursor=db.query(&quot;account&quot;,null,null,null,null,null,null)
+        while (cursor.moveToNext())&#123;
+            account= Account()
+            var id:Long=cursor.getLong(cursor.getColumnIndex(&quot;_id&quot;))
+            var name:String=cursor.getString(cursor.getColumnIndex(&quot;name&quot;))
+            var balance:Int= cursor.getInt(cursor.getColumnIndex(&quot;balance&quot;))
+            account.id=id
+            account.name=name
+            account.balance=balance
+            accountList.add(account)
+        &#125;
+        cursor.close()
+        return accountList
+    &#125;
+    fun update(account: Account):Int&#123;
+        db=helper.writableDatabase
+        var values:ContentValues= ContentValues()
+        values.put(&quot;name&quot;,account.name)
+        values.put(&quot;balance&quot;,account.balance)
+        var t:Int=db.update(&quot;account&quot;,values,&quot;_id=?&quot;, arrayOf(account.id.toString()))
+        return t
+    &#125;
+    //删除商品信息
+    fun delete(account: Account):Int&#123;
+        db=helper.writableDatabase
+        var t=db.delete(&quot;account&quot;,&quot;_id=?&quot;, arrayOf(account.id.toString()))
+        return t
+    &#125;
+    fun lookAccountByName(name:String):MutableList&lt;Account&gt; &#123;
+        db = helper.readableDatabase
+        var cursor: Cursor =
+            db.query(&quot;account&quot;, null, &quot;name like ?&quot;, arrayOf(&quot;%&quot; + name + &quot;%&quot;), null, null, null)
+            accountList.clear()
+        var account:Account
+        var name:String
+        var id:Long
+        var balance:Int
+        while (cursor.moveToNext())&#123;
+            account= Account()
+            id=cursor.getLong(cursor.getColumnIndex(&quot;_id&quot;))
+            name=cursor.getString(cursor.getColumnIndex(&quot;name&quot;))
+            balance=cursor.getInt(cursor.getColumnIndex(&quot;balance&quot;))
+            account.let &#123;
+                it.id=id
+                it.name=name
+                it.balance=balance
+            &#125;
+            accountList.add(account)
+        &#125;
+        return accountList
+    &#125;
+&#125;
+</code></pre>
+<p>三.数据库的实现【DataBaseHelper.kt】<br>这个是对sqlite数据库功能实现的类，直接上代码：</p>
+<pre><code class="kotlin">
+class DataBaseHelper (Context:Context,dbName:String=&quot;product.db&quot;):SQLiteOpenHelper(Context,dbName,null,1)&#123;
+    val create_table_account:String=&quot;create table account(_id integer primary key autoIncrement,&quot;+
+            &quot;name text,balance intgeter)&quot;
+    override fun onCreate(p0: SQLiteDatabase?) &#123;
+        p0?.execSQL(create_table_account)
+        TODO(&quot;Not yet implemented&quot;)
+    &#125;
+
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) &#123;
 
     &#125;
-    dialog.show()
-&#125;
-fun raiseAccount(id:Int)&#123;
-    var account:Account=accountList.get(id)
-    dao= AccountDao(content)
-    account.balance=account.balance+1
-    var t:Int=dao.update(account)
-    notifyDataSetChanged()
-&#125;
-fun lowerAccount(id:Int)&#123;
-    var account:Account=accountList.get(id)
-    dao= AccountDao(content)
-    account.balance=account.balance-1
-    var t:Int=dao.update(account)
-    notifyDataSetChanged()
 &#125;
 </code></pre>
-<p>}</p>
-<p>二.数据访问层【AcountDao.kt】<br>用于对账户数据进行增删改查的操作。<br>在构造方法中，需要传入一个上下文Context对象，并初始化了数据库帮助类DataBaseHelper和账户列表accountList。<br>类中定义了一些方法，包括：<br>insert(): 向数据库中插入一个账户对象，通过ContentValues来设置账户的名称和余额，并返回插入后的账户ID。<br>getAllAccount(): 查询数据库中的所有账户数据，并将查询结果封装为一个Account对象列表。<br>update(): 更新数据库中指定账户的名称和余额。<br>delete(): 根据指定账户ID删除数据库中的对应账户。<br>lookAccountByName(): 根据指定名称模糊查询数据库中的账户数据，并返回符合条件的Account对象列表。<br>在每个操作方法中，都通过获取可读&#x2F;可写的数据库实例，在使用完毕后，需要及时关闭Cursor和数据库连接。</p>
-<p>相关代码：<br>class AccountDao (context: Context){<br>    lateinit var accountList: MutableList<Account><br>    lateinit var db:SQLiteDatabase<br>    lateinit var helper:DataBaseHelper<br>    init {<br>        helper&#x3D; DataBaseHelper(context)<br>        accountList&#x3D; mutableListOf()<br>    }<br>    fun insert(account: Account){<br>        db&#x3D;helper.writableDatabase<br>        val contentValue: ContentValues &#x3D;ContentValues()<br>        contentValue.put(“name”,account.name)<br>        contentValue.put(“balance”,account.balance)<br>        var id:Long &#x3D; db.insert(“account”,null,contentValue)<br>        account.id&#x3D;id<br>    }<br>    fun getAllAccount():MutableList<Account>{<br>        db&#x3D;helper.readableDatabase<br>        var account:Account<br>        var cursor:Cursor&#x3D;db.query(“account”,null,null,null,null,null,null)<br>        while (cursor.moveToNext()){<br>            account&#x3D; Account()<br>            var id:Long&#x3D;cursor.getLong(cursor.getColumnIndex(“_id”))<br>            var name:String&#x3D;cursor.getString(cursor.getColumnIndex(“name”))<br>            var balance:Int&#x3D; cursor.getInt(cursor.getColumnIndex(“balance”))<br>            account.id&#x3D;id<br>            account.name&#x3D;name<br>            account.balance&#x3D;balance<br>            accountList.add(account)<br>        }<br>        cursor.close()<br>        return accountList<br>    }<br>    fun update(account: Account):Int{<br>        db&#x3D;helper.writableDatabase<br>        var values:ContentValues&#x3D; ContentValues()<br>        values.put(“name”,account.name)<br>        values.put(“balance”,account.balance)<br>        var t:Int&#x3D;db.update(“account”,values,”_id&#x3D;?”, arrayOf(account.id.toString()))<br>        return t<br>    }<br>    &#x2F;&#x2F;删除商品信息<br>    fun delete(account: Account):Int{<br>        db&#x3D;helper.writableDatabase<br>        var t&#x3D;db.delete(“account”,”_id&#x3D;?”, arrayOf(account.id.toString()))<br>        return t<br>    }<br>    fun lookAccountByName(name:String):MutableList<Account> {<br>        db &#x3D; helper.readableDatabase<br>        var cursor: Cursor &#x3D;<br>            db.query(“account”, null, “name like ?”, arrayOf(“%” + name + “%”), null, null, null)<br>            accountList.clear()<br>        var account:Account<br>        var name:String<br>        var id:Long<br>        var balance:Int<br>        while (cursor.moveToNext()){<br>            account&#x3D; Account()<br>            id&#x3D;cursor.getLong(cursor.getColumnIndex(“_id”))<br>            name&#x3D;cursor.getString(cursor.getColumnIndex(“name”))<br>            balance&#x3D;cursor.getInt(cursor.getColumnIndex(“balance”))<br>            account.let {<br>                it.id&#x3D;id<br>                it.name&#x3D;name<br>                it.balance&#x3D;balance<br>            }<br>            accountList.add(account)<br>        }<br>        return accountList<br>    }<br>}</p>
-<p>三.数据库的实现【DataBaseHelper.kt】<br>这个是对sqlite数据库功能实现的类，直接上代码：<br>class DataBaseHelper (Context:Context,dbName:String&#x3D;”product.db”):SQLiteOpenHelper(Context,dbName,null,1){<br>    val create_table_account:String&#x3D;”create table account(_id integer primary key autoIncrement,”+<br>            “name text,balance intgeter)”<br>    override fun onCreate(p0: SQLiteDatabase?) {<br>        p0?.execSQL(create_table_account)<br>        TODO(“Not yet implemented”)<br>    }</p>
-<pre><code>override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) &#123;
-
-&#125;
+<p>四.几个布局的文件的相关代码如下：<br>文件一</p>
+<pre><code class="xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
+    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    tools:context=&quot;.activity.MainActivity&quot;&gt;
+&lt;EditText
+    android:layout_width=&quot;200dp&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:id=&quot;@+id/et_name&quot;
+    android:hint=&quot;商品名称&quot;
+    android:layout_marginLeft=&quot;10dp&quot;
+    app:layout_constraintLeft_toLeftOf=&quot;parent&quot;
+    app:layout_constraintTop_toTopOf=&quot;parent&quot;&gt;&lt;/EditText&gt;
+&lt;EditText
+    android:layout_width=&quot;80dp&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:id=&quot;@+id/et_balance&quot;
+    android:hint=&quot;金额&quot;
+    app:layout_constraintLeft_toRightOf=&quot;@id/et_name&quot;
+    app:layout_constraintTop_toTopOf=&quot;parent&quot;&gt;&lt;/EditText&gt;
+&lt;ImageView
+    android:layout_width=&quot;25dp&quot;
+    android:layout_height=&quot;25dp&quot;
+    android:src=&quot;@drawable/add&quot;
+    android:scaleType=&quot;fitXY&quot;
+    android:id=&quot;@+id/image_add&quot;
+    android:layout_marginLeft=&quot;20dp&quot;
+    android:layout_marginTop=&quot;10dp&quot;
+    app:layout_constraintLeft_toRightOf=&quot;@id/et_balance&quot;
+    app:layout_constraintTop_toTopOf=&quot;parent&quot;
+    android:layout_marginRight=&quot;20dp&quot;&gt;&lt;/ImageView&gt;
+    &lt;ListView
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;0dp&quot;
+        android:id=&quot;@+id/listview_account&quot;
+        android:divider=&quot;@android:color/darker_gray&quot;
+        app:layout_constraintLeft_toLeftOf=&quot;parent&quot;
+        app:layout_constraintTop_toBottomOf=&quot;@id/et_name&quot;
+        app:layout_constraintBottom_toBottomOf=&quot;parent&quot;&gt;&lt;/ListView&gt;
+&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;
 </code></pre>
-<p>}</p>
-<p>四.几个布局的文件的相关代码如下：</p>
-<?xml version="1.0" encoding="utf-8"?>
-<p>&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android&#x3D;”<a target="_blank" rel="noopener" href="http://schemas.android.com/apk/res/android">http://schemas.android.com/apk/res/android</a>“<br>    xmlns:app&#x3D;”<a target="_blank" rel="noopener" href="http://schemas.android.com/apk/res-auto">http://schemas.android.com/apk/res-auto</a>“<br>    xmlns:tools&#x3D;”<a target="_blank" rel="noopener" href="http://schemas.android.com/tools">http://schemas.android.com/tools</a>“<br>    android:layout_width&#x3D;”match_parent”<br>    android:layout_height&#x3D;”match_parent”<br>    tools:context&#x3D;”.activity.MainActivity”&gt;<br><EditText
-    android:layout_width="200dp"
-    android:layout_height="wrap_content"
-    android:id="@+id/et_name"
-    android:hint="商品名称"
-    android:layout_marginLeft="10dp"
-    app:layout_constraintLeft_toLeftOf="parent"
-    app:layout_constraintTop_toTopOf="parent"></EditText><br><EditText
-    android:layout_width="80dp"
-    android:layout_height="wrap_content"
-    android:id="@+id/et_balance"
-    android:hint="金额"
-    app:layout_constraintLeft_toRightOf="@id/et_name"
-    app:layout_constraintTop_toTopOf="parent"></EditText><br><ImageView
-    android:layout_width="25dp"
-    android:layout_height="25dp"
-    android:src="@drawable/add"
-    android:scaleType="fitXY"
-    android:id="@+id/image_add"
-    android:layout_marginLeft="20dp"
-    android:layout_marginTop="10dp"
-    app:layout_constraintLeft_toRightOf="@id/et_balance"
-    app:layout_constraintTop_toTopOf="parent"
-    android:layout_marginRight="20dp"></ImageView><br>    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:id="@+id/listview_account"
-        android:divider="@android:color/darker_gray"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_name"
-        app:layout_constraintBottom_toBottomOf="parent"></ListView><br>&lt;&#x2F;androidx.constraintlayout.widget.ConstraintLayout&gt;</p>
-<?xml version="1.0" encoding="utf-8"?>
-<p><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:padding="10dp"><br>    <TextView
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_id_listview"
-        android:gravity="center_vertical"></TextView><br>    <TextView
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_name_listview"
-        android:gravity="center_vertical"></TextView><br>    <TextView
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_balance_listview"></TextView><br>    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"><br>        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/up"
-            android:id="@+id/image_up"></ImageView><br>        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/down"
-            android:id="@+id/image_down"></ImageView><br>    </LinearLayout><br>    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/delete"
-        android:id="@+id/image_delete"></ImageView><br></LinearLayout></p>
-<?xml version="1.0" encoding="utf-8"?>
-<p><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"><br><EditText
-    android:layout_width="260dp"
-    android:layout_height="wrap_content"
-    android:id="@+id/et_name_look_dialog"
-    android:hint="输入商品名称"
-    ></EditText><br></LinearLayout></p>
-<?xml version="1.0" encoding="utf-8"?>
-<p><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="15dp"><br>    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"><br>        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="商品名称"></TextView><br>        <EditText
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_update_account_name_dialog"></EditText><br>    </LinearLayout><br>    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"><br>        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="商品价格"></TextView><br>        <EditText
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/et_update_account_balance_dialog"></EditText><br>    </LinearLayout><br></LinearLayout></p>
+<p>文件二</p>
+<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;horizontal&quot;
+    android:padding=&quot;10dp&quot;&gt;
+    &lt;TextView
+        android:layout_width=&quot;60dp&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:id=&quot;@+id/tv_id_listview&quot;
+        android:gravity=&quot;center_vertical&quot;&gt;&lt;/TextView&gt;
+    &lt;TextView
+        android:layout_width=&quot;150dp&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:id=&quot;@+id/tv_name_listview&quot;
+        android:gravity=&quot;center_vertical&quot;&gt;&lt;/TextView&gt;
+    &lt;TextView
+        android:layout_width=&quot;80dp&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:id=&quot;@+id/tv_balance_listview&quot;&gt;&lt;/TextView&gt;
+    &lt;LinearLayout
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;vertical&quot;&gt;
+        &lt;ImageView
+            android:layout_width=&quot;20dp&quot;
+            android:layout_height=&quot;20dp&quot;
+            android:src=&quot;@drawable/up&quot;
+            android:id=&quot;@+id/image_up&quot;&gt;&lt;/ImageView&gt;
+        &lt;ImageView
+            android:layout_width=&quot;20dp&quot;
+            android:layout_height=&quot;20dp&quot;
+            android:src=&quot;@drawable/down&quot;
+            android:id=&quot;@+id/image_down&quot;&gt;&lt;/ImageView&gt;
+    &lt;/LinearLayout&gt;
+    &lt;ImageView
+        android:layout_width=&quot;30dp&quot;
+        android:layout_height=&quot;30dp&quot;
+        android:src=&quot;@drawable/delete&quot;
+        android:id=&quot;@+id/image_delete&quot;&gt;&lt;/ImageView&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<p>文件三</p>
+<pre><code class="xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;
+    android:padding=&quot;10dp&quot;&gt;
+&lt;EditText
+    android:layout_width=&quot;260dp&quot;
+    android:layout_height=&quot;wrap_content&quot;
+    android:id=&quot;@+id/et_name_look_dialog&quot;
+    android:hint=&quot;输入商品名称&quot;
+    &gt;&lt;/EditText&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
+<p>文件四</p>
+<pre><code class="xml">
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    android:layout_width=&quot;match_parent&quot;
+    android:layout_height=&quot;match_parent&quot;
+    android:orientation=&quot;vertical&quot;
+    android:padding=&quot;15dp&quot;&gt;
+    &lt;LinearLayout
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot;&gt;
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;商品名称&quot;&gt;&lt;/TextView&gt;
+        &lt;EditText
+            android:layout_width=&quot;260dp&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:id=&quot;@+id/et_update_account_name_dialog&quot;&gt;&lt;/EditText&gt;
+    &lt;/LinearLayout&gt;
+    &lt;LinearLayout
+        android:layout_width=&quot;wrap_content&quot;
+        android:layout_height=&quot;wrap_content&quot;
+        android:orientation=&quot;horizontal&quot;&gt;
+        &lt;TextView
+            android:layout_width=&quot;wrap_content&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:text=&quot;商品价格&quot;&gt;&lt;/TextView&gt;
+        &lt;EditText
+            android:layout_width=&quot;260dp&quot;
+            android:layout_height=&quot;wrap_content&quot;
+            android:id=&quot;@+id/et_update_account_balance_dialog&quot;&gt;&lt;/EditText&gt;
+    &lt;/LinearLayout&gt;
+&lt;/LinearLayout&gt;
+</code></pre>
 <p>五.主界面的.kt我会单独写出一份文章来做简单解析，顺便补充一些其他东西</p>
 <p>写在后面：<br>安卓开发需要学习掌握Java或Kotlin等编程语言，以及安卓特定的API和框架。作为一个初学者，可能需要一定的学习曲线和掌握大量的技术细节。同时，由于安卓平台的不断更新和演进，需要不断学习新的功能和技术。</p>
 
