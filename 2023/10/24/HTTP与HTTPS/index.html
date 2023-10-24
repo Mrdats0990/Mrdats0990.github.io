@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>http和https | 苦叶的小窝</title>
+    <meta name="author" content="dats苦叶" />
+    <meta name="description" content="The things we love are the driving force on the road to success" />
+    <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="icon" href="/images/avatar.jpg" />
+    <link rel="preconnect" href="https://cdn.staticfile.org" />
+<script src="https://cdn.staticfile.org/vue/3.3.4/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.loli.net" />
+<link rel="preconnect" href="https://gstatic.loli.net" crossorigin />
+<link rel="stylesheet" href="https://fonts.loli.net/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.8.0/highlight.min.js"></script>
+<script src="https://cdn.staticfile.org/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.8.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>苦叶的小窝</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;主页</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;分类</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;苦叶的小窝</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">主页</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">关于</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">分类</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>http和https</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/10/24
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%96%87%E6%A1%A3/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                文档
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E7%BD%91%E7%BB%9C-%E6%8A%80%E6%9C%AF/" style="color: #00bcd4">网络 - 技术</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <ul>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AFhttp%E5%92%8Chttps%EF%BC%9F">什么是http和https？</a></li>
+<li><a href="#%E5%AE%83%E4%BB%AC%E4%B9%8B%E9%97%B4%E6%9C%89%E4%BB%80%E4%B9%88%E8%81%94%E7%B3%BB%E5%92%8C%E5%8C%BA%E5%88%AB%EF%BC%9F">它们之间有什么联系和区别？</a></li>
+<li><a href="#http%E7%9A%84%E6%B6%88%E6%81%AF%E7%BB%93%E6%9E%84%E3%80%81%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95%E3%80%81%E5%93%8D%E5%BA%94%E5%A4%B4%E4%BF%A1%E6%81%AF%EF%BC%9F">http的消息结构、请求方法、响应头信息？</a></li>
+<li><a href="#%E5%B8%B8%E8%A7%81%E7%9A%84http%E7%8A%B6%E6%80%81%E7%A0%81%E6%9C%89%E5%93%AA%E4%BA%9B%EF%BC%9F">常见的http状态码有哪些？</a></li>
+</ul>
+<p><img src="/images/https.jpg" alt="示例4"></p>
+<h1 id="什么是http和https？"><a href="#什么是http和https？" class="headerlink" title="什么是http和https？"></a>什么是http和https？</h1><p>1.HTTP（全称：Hypertext Transfer Protocol）是一种用于在网络上传输超文本的应用层协议。它是客户端-服务器模型中的一部分，客户端发送HTTP请求，服务器返回HTTP响应。我们通常在Web浏览器中使用HTTP协议来访问网页。<br>2.HTTP使用TCP&#x2F;IP作为底层传输协议，通过指定的端口（默认为80端口）建立客户端和服务器之间的连接。HTTP协议基于请求-响应模型工作，客户端向服务器发送HTTP请求，服务器接收请求后处理并发送HTTP响应返回给客户端。<br>3.HTTP请求和响应都具有相似的结构，包含一个起始行（包括请求方法或HTTP版本）和多个头部字段（例如内容类型、内容长度等）。在请求中，我们常见的方法有GET、POST、PUT、DELETE等，它们用于指定请求的操作类型。在响应中，常见的状态码有200表示成功、404表示未找到、500表示服务器内部错误等。<br>4.HTTP协议支持多种类型的内容，如HTML、CSS、JavaScript、图片、视频等。客户端发送HTTP请求时，可以包含请求头字段，用于提供额外的信息，如浏览器类型、用户身份验证等。服务器返回的HTTP响应中也可以包含响应头字段，用于提供关于响应的元数据，如日期、内容类型等。<br>5.HTTP协议是无状态的，即服务器不保留与客户端的连接状态信息。这意味着每个请求都是独立的，服务器不会记住之前的请求。为了解决这个问题，常见的解决方案是使用Cookie或Session来保持状态。<br>6.总结起来，HTTP是一种用于在网络上传输超文本的协议，它采用客户端-服务器模型，使得Web浏览器可以通过发送HTTP请求访问网页。通过HTTP，我们可以获取和发送各种类型的内容，并实现无状态的通信。<br>7.HTTPS是HTTP（全称：Hypertext Transfer Protocol）的安全版本，即Hypertext Transfer Protocol Secure。它是一种通过使用加密技术来保护数据传输安全的通信协议。<br>8.HTTPS使用SSL（Secure Sockets Layer）或TLS（Transport Layer Security）协议来对HTTP通信进行加密。它添加了一层安全性，使得传输的数据在网络传输过程中更加保密、完整和可靠。与普通的HTTP协议相比，HTTPS的主要区别在于数据的加密和身份验证。通过使用SSL&#x2F;TLS证书，HTTPS确保数据在客户端和服务器之间的传输过程中是经过加密的，防止被未授权的第三方窃取、篡改或伪装。<br>9.在HTTPS中，数据传输过程分为两个阶段。首先，客户端和服务器之间进行SSL&#x2F;TLS握手，确保建立安全的加密连接。然后，在加密的连接上进行HTTP通信，保证传输的数据隐私和完整性。<br>10.使用HTTPS的主要好处包括：<br>数据安全性：由于数据经过加密，使得窃听者无法获取或破译传输的敏感信息。<br>网站认证：HTTPS使用SSL&#x2F;TLS证书，可以验证服务器的身份，确保用户正在访问可信的网站，避免钓鱼等网络攻击。<br>搜索引擎优化：搜索引擎更倾向于将采用HTTPS协议的网站排名较高，因为它们对用户的隐私和安全提供更好的保护。<br>总结来说，HTTPS是通过使用SSL&#x2F;TLS加密技术来保护HTTP通信的安全协议。它提供了数据加密和身份验证的功能，保护用户在Web上的敏感信息和隐私。</p>
+<p><img src="/images/http.png" alt="示例1"></p>
+<h1 id="它们之间有什么联系和区别？"><a href="#它们之间有什么联系和区别？" class="headerlink" title="它们之间有什么联系和区别？"></a>它们之间有什么联系和区别？</h1><p>HTTP和HTTPS都是应用层协议，用于在客户端和服务器之间传输数据。两者都使用相同的请求和响应机制。<br>主要区别在于安全性方面。HTTP的数据传输是明文的，可能被第三方窃听和篡改。<br>而HTTPS通过加密传输数据，保证了数据的安全性。</p>
+<p><img src="/images/http2.png" alt="示例2"></p>
+<h1 id="http的消息结构、请求方法、响应头信息？"><a href="#http的消息结构、请求方法、响应头信息？" class="headerlink" title="http的消息结构、请求方法、响应头信息？"></a>http的消息结构、请求方法、响应头信息？</h1><h2 id="HTTP的消息结构包括请求和响应两种类型："><a href="#HTTP的消息结构包括请求和响应两种类型：" class="headerlink" title="HTTP的消息结构包括请求和响应两种类型："></a>HTTP的消息结构包括请求和响应两种类型：</h2><p>1.请求消息结构：<br>请求行（Request Line）：包含请求方法、URL和协议版本。<br>请求头部（Request Headers）：包含请求的附加信息，如User-Agent、Content-Type等。<br>请求正文（Request Body）：可选，包含请求的主体数据。<br>2.响应消息结构：<br>状态行（Status Line）：包含协议版本、状态码和状态文本。<br>响应头部（Response Headers）：包含响应的附加信息，如Content-Type、Date等。<br>响应正文（Response Body）：可选，包含响应的主体数据。</p>
+<h2 id="HTTP常见的请求方法："><a href="#HTTP常见的请求方法：" class="headerlink" title="HTTP常见的请求方法："></a>HTTP常见的请求方法：</h2><p>GET：获取资源。<br>POST：提交数据，创建新资源。<br>PUT：更新现有资源。<br>DELETE：删除资源。<br>HEAD：获取资源的头部信息。</p>
+<h2 id="HTTP常见的响应头信息："><a href="#HTTP常见的响应头信息：" class="headerlink" title="HTTP常见的响应头信息："></a>HTTP常见的响应头信息：</h2><p>Content-Type：指示响应内容的媒体类型，如text&#x2F;html、application&#x2F;json等。<br>Content-Length：指示响应内容的长度。<br>Server：指示服务器软件的名称和版本号。<br>Date：指示响应生成的日期和时间。<br>Set-Cookie：用于在客户端保存一些数据，如会话标识等。</p>
+<p><img src="/images/http3.png" alt="示例3"></p>
+<h1 id="常见的http状态码有哪些？"><a href="#常见的http状态码有哪些？" class="headerlink" title="常见的http状态码有哪些？"></a>常见的http状态码有哪些？</h1><p>200 OK：请求成功。<br>301 Moved Permanently：永久重定向。<br>400 Bad Request：请求错误。<br>403 Forbidden：禁止访问。<br>404 Not Found：资源不存在。<br>500 Internal Server Error：服务器内部错误。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2023 苦叶的小窝
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;dats苦叶
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
