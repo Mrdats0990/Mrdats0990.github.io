@@ -223,7 +223,7 @@
         
         <span class="tag">
             
-            <a href="/tags/%E7%BD%91%E7%BB%9C-%E6%8A%80%E6%9C%AF/" style="color: #03a9f4">网络 - 技术</a>
+            <a href="/tags/%E7%BD%91%E7%BB%9C-%E6%8A%80%E6%9C%AF/" style="color: #ffa2c4">网络 - 技术</a>
         </span>
         
     </div>
@@ -274,12 +274,12 @@
         
         <span class="tag">
             
-            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #03a9f4">技术</a>
+            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #ffa2c4">技术</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/%E5%AE%89%E5%8D%93/" style="color: #ff7d73">安卓</a>
+            <a href="/tags/%E5%AE%89%E5%8D%93/" style="color: #00bcd4">安卓</a>
         </span>
         
     </div>
@@ -339,12 +339,12 @@
         
         <span class="tag">
             
-            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #00a596">技术</a>
+            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #03a9f4">技术</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="color: #00bcd4">数据库</a>
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" style="color: #00a596">数据库</a>
         </span>
         
     </div>
@@ -407,7 +407,7 @@
         
         <span class="tag">
             
-            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #ffa2c4">技术</a>
+            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #03a9f4">技术</a>
         </span>
         
         <span class="tag">
@@ -467,493 +467,11 @@
         
         <span class="tag">
             
-            <a href="/tags/%E5%9B%BE%E7%89%87/" style="color: #ffa2c4">图片</a>
+            <a href="/tags/%E5%9B%BE%E7%89%87/" style="color: #03a9f4">图片</a>
         </span>
         
     </div>
     <a href="/2023/10/19/%E5%9B%BE%E5%BA%93%E5%88%86%E4%BA%AB/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2023/10/18/%E3%80%90%E5%AE%89%E5%8D%93%E3%80%91%E5%95%86%E5%93%81%E6%93%8D%E4%BD%9C%E9%A1%B5/">
-        <h2 class="post-title">【安卓开发】商品展示操作页1</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/%E7%BC%96%E7%A8%8B/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                编程
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2023/10/18
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <p>最近在做Android APP商品页面操作模块<br>下面是实现过程和一些心得总结：</p>
-<p>工程结构：<br>[.kt]<br>MainActivity<br>Account<br>AccountAdapter<br>AcountDao<br>DataBaseHelper<br>[.xml]<br>activity_main<br>listview_item<br>look_account<br>update_account</p>
-<p>一.适配器Adapter【AccountAdapter.kt】<br>自定义的账户适配器类，用于在ListView中显示账户信息。适配器继承自BaseAdapter类，并重写了一些必要的方法。<br>在构造方法中，需要传入上下文Context和账户列表accountList。<br>重写的方法包括：<br>getCount(): 返回账户列表的数量。<br>getItem(): 根据指定位置返回对应的账户对象。<br>getItemId(): 根据指定位置返回对应的账户ID。<br>getView(): 根据指定位置创建或复用一个列表项的View，并为View设置账户的相关信息。同时，为列表项中的按钮设置点击事件监听器。<br>此外，适配器还定义了一些辅助方法：<br>deleteAccount(): 删除指定位置的账户，并更新数据源和视图。<br>raiseAccount(): 在指定位置的账户的余额上加1，并更新数据源和视图。<br>lowerAccount(): 在指定位置的账户的余额上减1，并更新数据源和视图。<br>值得注意的是，在代码中使用了AlertDialog来显示删除确认对话框，用户可以选择确认删除或取消操作。<br>在适配器中还引用了AccountDao类，用于操作账户数据的增删改查。可以根据具体需求实现其相关方法来完成数据的持久化操作。</p>
-<p>相关代码：</p>
-<pre><code class="kotlin">
-class AccountAdapter (var content:Context,var accountList:MutableList&lt;Account&gt;): BaseAdapter() &#123;
-    lateinit var dao:AccountDao
-    override fun getCount(): Int &#123;
-        return accountList.size
-    &#125;
-
-    override fun getItem(p0: Int): Any &#123;
-        return accountList.get(p0)
-    &#125;
-
-    override fun getItemId(p0: Int): Long &#123;
-        return p0.toLong()
-    &#125;
-
-    override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View &#123;
-        var view:View
-        if(p1==null)&#123;
-            view=LayoutInflater.from(content).inflate(R.layout.listview_item ,null)
-        &#125;else&#123;
-            view=p1
-        &#125;
-        var account:Account=accountList.get(p0)
-        var tv_id:TextView
-        var tv_name:TextView
-        var tv_balance:TextView
-        var image_up:ImageView
-        var image_down:ImageView
-        var image_del:ImageView
-        tv_id=view.findViewById(R.id.tv_id_listview)
-        tv_name=view.findViewById(R.id.tv_name_listview)
-        tv_balance=view.findViewById(R.id.tv_balance_listview)
-        image_up= view.findViewById(R.id.image_up)
-        image_down=view.findViewById(R.id.image_down)
-        image_del=view.findViewById(R.id.image_delete)
-        tv_id.setText(account.id.toString())
-        tv_name.setText(account.name)
-        tv_balance.setText(account.balance.toString())
-        image_up.setOnClickListener &#123;raiseAccount(p0)&#125;
-        image_down.setOnClickListener &#123;lowerAccount(p0)&#125;
-        image_del.setOnClickListener &#123; deleteAccount(p0) &#125;
-        return view
-    &#125;
-    fun deleteAccount(id:Int)&#123;
-        var dialog:AlertDialog.Builder=AlertDialog.Builder(content)
-        var account=accountList[id]
-        dialog.setTitle(&quot;警告&quot;)
-        dialog.setIcon(R.mipmap.ic_launcher)
-        dialog.setMessage(&quot;你真的要删除吗？&quot;)
-        dialog.setPositiveButton(&quot;确定&quot;)&#123;dialogInterface,i-&gt;
-            dao=AccountDao(content)
-            var t:Int=dao.delete(account)
-            if (t&gt;0) &#123;
-                Toast.makeText(content, &quot;数据删除成功&quot;, Toast.LENGTH_LONG).show()
-            &#125;else&#123;
-                Toast.makeText(content, &quot;数据删除失败&quot;, Toast.LENGTH_LONG).show()
-            &#125;
-                accountList.remove(account)
-                notifyDataSetChanged()
-            &#125;
-        dialog.setNegativeButton(&quot;取消&quot;)&#123;dialogInterface,i-&gt;
-
-        &#125;
-        dialog.show()
-    &#125;
-    fun raiseAccount(id:Int)&#123;
-        var account:Account=accountList.get(id)
-        dao= AccountDao(content)
-        account.balance=account.balance+1
-        var t:Int=dao.update(account)
-        notifyDataSetChanged()
-    &#125;
-    fun lowerAccount(id:Int)&#123;
-        var account:Account=accountList.get(id)
-        dao= AccountDao(content)
-        account.balance=account.balance-1
-        var t:Int=dao.update(account)
-        notifyDataSetChanged()
-    &#125;
-&#125;
-</code></pre>
-<p>二.数据访问层【AcountDao.kt】<br>用于对账户数据进行增删改查的操作。<br>在构造方法中，需要传入一个上下文Context对象，并初始化了数据库帮助类DataBaseHelper和账户列表accountList。<br>类中定义了一些方法，包括：<br>insert(): 向数据库中插入一个账户对象，通过ContentValues来设置账户的名称和余额，并返回插入后的账户ID。<br>getAllAccount(): 查询数据库中的所有账户数据，并将查询结果封装为一个Account对象列表。<br>update(): 更新数据库中指定账户的名称和余额。<br>delete(): 根据指定账户ID删除数据库中的对应账户。<br>lookAccountByName(): 根据指定名称模糊查询数据库中的账户数据，并返回符合条件的Account对象列表。<br>在每个操作方法中，都通过获取可读&#x2F;可写的数据库实例，在使用完毕后，需要及时关闭Cursor和数据库连接。</p>
-<p>相关代码：</p>
-<pre><code class="kotlin">
-class AccountDao (context: Context)&#123;
-    lateinit var accountList: MutableList&lt;Account&gt;
-    lateinit var db:SQLiteDatabase
-    lateinit var helper:DataBaseHelper
-    init &#123;
-        helper= DataBaseHelper(context)
-        accountList= mutableListOf()
-    &#125;
-    fun insert(account: Account)&#123;
-        db=helper.writableDatabase
-        val contentValue: ContentValues =ContentValues()
-        contentValue.put(&quot;name&quot;,account.name)
-        contentValue.put(&quot;balance&quot;,account.balance)
-        var id:Long = db.insert(&quot;account&quot;,null,contentValue)
-        account.id=id
-    &#125;
-    fun getAllAccount():MutableList&lt;Account&gt;&#123;
-        db=helper.readableDatabase
-        var account:Account
-        var cursor:Cursor=db.query(&quot;account&quot;,null,null,null,null,null,null)
-        while (cursor.moveToNext())&#123;
-            account= Account()
-            var id:Long=cursor.getLong(cursor.getColumnIndex(&quot;_id&quot;))
-            var name:String=cursor.getString(cursor.getColumnIndex(&quot;name&quot;))
-            var balance:Int= cursor.getInt(cursor.getColumnIndex(&quot;balance&quot;))
-            account.id=id
-            account.name=name
-            account.balance=balance
-            accountList.add(account)
-        &#125;
-        cursor.close()
-        return accountList
-    &#125;
-    fun update(account: Account):Int&#123;
-        db=helper.writableDatabase
-        var values:ContentValues= ContentValues()
-        values.put(&quot;name&quot;,account.name)
-        values.put(&quot;balance&quot;,account.balance)
-        var t:Int=db.update(&quot;account&quot;,values,&quot;_id=?&quot;, arrayOf(account.id.toString()))
-        return t
-    &#125;
-    //删除商品信息
-    fun delete(account: Account):Int&#123;
-        db=helper.writableDatabase
-        var t=db.delete(&quot;account&quot;,&quot;_id=?&quot;, arrayOf(account.id.toString()))
-        return t
-    &#125;
-    fun lookAccountByName(name:String):MutableList&lt;Account&gt; &#123;
-        db = helper.readableDatabase
-        var cursor: Cursor =
-            db.query(&quot;account&quot;, null, &quot;name like ?&quot;, arrayOf(&quot;%&quot; + name + &quot;%&quot;), null, null, null)
-            accountList.clear()
-        var account:Account
-        var name:String
-        var id:Long
-        var balance:Int
-        while (cursor.moveToNext())&#123;
-            account= Account()
-            id=cursor.getLong(cursor.getColumnIndex(&quot;_id&quot;))
-            name=cursor.getString(cursor.getColumnIndex(&quot;name&quot;))
-            balance=cursor.getInt(cursor.getColumnIndex(&quot;balance&quot;))
-            account.let &#123;
-                it.id=id
-                it.name=name
-                it.balance=balance
-            &#125;
-            accountList.add(account)
-        &#125;
-        return accountList
-    &#125;
-&#125;
-</code></pre>
-<p>三.数据库的实现【DataBaseHelper.kt】<br>这个是对sqlite数据库功能实现的类，直接上代码：</p>
-<pre><code class="kotlin">
-class DataBaseHelper (Context:Context,dbName:String=&quot;product.db&quot;):SQLiteOpenHelper(Context,dbName,null,1)&#123;
-    val create_table_account:String=&quot;create table account(_id integer primary key autoIncrement,&quot;+
-            &quot;name text,balance intgeter)&quot;
-    override fun onCreate(p0: SQLiteDatabase?) &#123;
-        p0?.execSQL(create_table_account)
-        TODO(&quot;Not yet implemented&quot;)
-    &#125;
-
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) &#123;
-
-    &#125;
-&#125;
-</code></pre>
-<p>四.几个布局的文件的相关代码如下：<br>文件一</p>
-<pre><code class="xml">
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;androidx.constraintlayout.widget.ConstraintLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    xmlns:app=&quot;http://schemas.android.com/apk/res-auto&quot;
-    xmlns:tools=&quot;http://schemas.android.com/tools&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    tools:context=&quot;.activity.MainActivity&quot;&gt;
-&lt;EditText
-    android:layout_width=&quot;200dp&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    android:id=&quot;@+id/et_name&quot;
-    android:hint=&quot;商品名称&quot;
-    android:layout_marginLeft=&quot;10dp&quot;
-    app:layout_constraintLeft_toLeftOf=&quot;parent&quot;
-    app:layout_constraintTop_toTopOf=&quot;parent&quot;&gt;&lt;/EditText&gt;
-&lt;EditText
-    android:layout_width=&quot;80dp&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    android:id=&quot;@+id/et_balance&quot;
-    android:hint=&quot;金额&quot;
-    app:layout_constraintLeft_toRightOf=&quot;@id/et_name&quot;
-    app:layout_constraintTop_toTopOf=&quot;parent&quot;&gt;&lt;/EditText&gt;
-&lt;ImageView
-    android:layout_width=&quot;25dp&quot;
-    android:layout_height=&quot;25dp&quot;
-    android:src=&quot;@drawable/add&quot;
-    android:scaleType=&quot;fitXY&quot;
-    android:id=&quot;@+id/image_add&quot;
-    android:layout_marginLeft=&quot;20dp&quot;
-    android:layout_marginTop=&quot;10dp&quot;
-    app:layout_constraintLeft_toRightOf=&quot;@id/et_balance&quot;
-    app:layout_constraintTop_toTopOf=&quot;parent&quot;
-    android:layout_marginRight=&quot;20dp&quot;&gt;&lt;/ImageView&gt;
-    &lt;ListView
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;0dp&quot;
-        android:id=&quot;@+id/listview_account&quot;
-        android:divider=&quot;@android:color/darker_gray&quot;
-        app:layout_constraintLeft_toLeftOf=&quot;parent&quot;
-        app:layout_constraintTop_toBottomOf=&quot;@id/et_name&quot;
-        app:layout_constraintBottom_toBottomOf=&quot;parent&quot;&gt;&lt;/ListView&gt;
-&lt;/androidx.constraintlayout.widget.ConstraintLayout&gt;
-</code></pre>
-<p>文件二</p>
-<pre><code class="xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:orientation=&quot;horizontal&quot;
-    android:padding=&quot;10dp&quot;&gt;
-    &lt;TextView
-        android:layout_width=&quot;60dp&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:id=&quot;@+id/tv_id_listview&quot;
-        android:gravity=&quot;center_vertical&quot;&gt;&lt;/TextView&gt;
-    &lt;TextView
-        android:layout_width=&quot;150dp&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:id=&quot;@+id/tv_name_listview&quot;
-        android:gravity=&quot;center_vertical&quot;&gt;&lt;/TextView&gt;
-    &lt;TextView
-        android:layout_width=&quot;80dp&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:id=&quot;@+id/tv_balance_listview&quot;&gt;&lt;/TextView&gt;
-    &lt;LinearLayout
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:orientation=&quot;vertical&quot;&gt;
-        &lt;ImageView
-            android:layout_width=&quot;20dp&quot;
-            android:layout_height=&quot;20dp&quot;
-            android:src=&quot;@drawable/up&quot;
-            android:id=&quot;@+id/image_up&quot;&gt;&lt;/ImageView&gt;
-        &lt;ImageView
-            android:layout_width=&quot;20dp&quot;
-            android:layout_height=&quot;20dp&quot;
-            android:src=&quot;@drawable/down&quot;
-            android:id=&quot;@+id/image_down&quot;&gt;&lt;/ImageView&gt;
-    &lt;/LinearLayout&gt;
-    &lt;ImageView
-        android:layout_width=&quot;30dp&quot;
-        android:layout_height=&quot;30dp&quot;
-        android:src=&quot;@drawable/delete&quot;
-        android:id=&quot;@+id/image_delete&quot;&gt;&lt;/ImageView&gt;
-&lt;/LinearLayout&gt;
-</code></pre>
-<p>文件三</p>
-<pre><code class="xml">
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:orientation=&quot;vertical&quot;
-    android:padding=&quot;10dp&quot;&gt;
-&lt;EditText
-    android:layout_width=&quot;260dp&quot;
-    android:layout_height=&quot;wrap_content&quot;
-    android:id=&quot;@+id/et_name_look_dialog&quot;
-    android:hint=&quot;输入商品名称&quot;
-    &gt;&lt;/EditText&gt;
-&lt;/LinearLayout&gt;
-</code></pre>
-<p>文件四</p>
-<pre><code class="xml">
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
-&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
-    android:layout_width=&quot;match_parent&quot;
-    android:layout_height=&quot;match_parent&quot;
-    android:orientation=&quot;vertical&quot;
-    android:padding=&quot;15dp&quot;&gt;
-    &lt;LinearLayout
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:orientation=&quot;horizontal&quot;&gt;
-        &lt;TextView
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:text=&quot;商品名称&quot;&gt;&lt;/TextView&gt;
-        &lt;EditText
-            android:layout_width=&quot;260dp&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:id=&quot;@+id/et_update_account_name_dialog&quot;&gt;&lt;/EditText&gt;
-    &lt;/LinearLayout&gt;
-    &lt;LinearLayout
-        android:layout_width=&quot;wrap_content&quot;
-        android:layout_height=&quot;wrap_content&quot;
-        android:orientation=&quot;horizontal&quot;&gt;
-        &lt;TextView
-            android:layout_width=&quot;wrap_content&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:text=&quot;商品价格&quot;&gt;&lt;/TextView&gt;
-        &lt;EditText
-            android:layout_width=&quot;260dp&quot;
-            android:layout_height=&quot;wrap_content&quot;
-            android:id=&quot;@+id/et_update_account_balance_dialog&quot;&gt;&lt;/EditText&gt;
-    &lt;/LinearLayout&gt;
-&lt;/LinearLayout&gt;
-</code></pre>
-<p>五.主界面的.kt我会单独写出一份文章来做简单解析，顺便补充一些其他东西</p>
-<p>写在后面：<br>安卓开发需要学习掌握Java或Kotlin等编程语言，以及安卓特定的API和框架。作为一个初学者，可能需要一定的学习曲线和掌握大量的技术细节。同时，由于安卓平台的不断更新和演进，需要不断学习新的功能和技术。</p>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #00a596">技术</a>
-        </span>
-        
-        <span class="tag">
-            
-            <a href="/tags/%E5%AE%89%E5%8D%93/" style="color: #03a9f4">安卓</a>
-        </span>
-        
-        <span class="tag">
-            
-            <a href="/tags/%E9%A1%B9%E7%9B%AE%E7%BC%96%E7%A8%8B/" style="color: #00bcd4">项目编程</a>
-        </span>
-        
-    </div>
-    <a href="/2023/10/18/%E3%80%90%E5%AE%89%E5%8D%93%E3%80%91%E5%95%86%E5%93%81%E6%93%8D%E4%BD%9C%E9%A1%B5/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2023/10/14/VM%E6%9C%AC%E5%9C%B0%E8%99%9A%E6%8B%9F%E6%B8%B8%E6%88%8FGM%E7%9C%9F%E7%AB%AF/">
-        <h2 class="post-title">VM虚拟本地游戏运行测试</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/%E6%96%87%E6%A1%A3/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                文档
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2023/10/14
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <p>一.项目概述</p>
-<p>在游戏开发过程中，为了确保游戏在用户的计算机上能够正常运行，进行本地端游戏运行测试是至关重要的。虚拟机（VM）技术提供了一种方便且低成本的方法来模拟不同操作系统环境，并进行游戏性能和稳定性测试。<br>二.项目简介</p>
-<p>该项目旨在通过使用虚拟机（VM）技术进行本地游戏运行测试，以确保游戏在不同操作系统环境下的正常运行和评估游戏性能与稳定性。通过模拟不同的操作系统环境，开发人员可以更好地了解游戏在各种计算机配置上的表现，并及时发现和解决潜在的问题。<br>三.项目过程</p>
-<p>0.第三方工具<br>Mysql：MySQL Workbench<br>在游戏开发过程中，通常会使用数据库来存储和管理游戏数据。对于虚拟机本地游戏运行测试，需要在虚拟环境中安装和配置适当的数据库软件，如MySQL。根据游戏的需求，设置数据库表结构、索引以及相应的权限控制。</p>
-<p>数据监测：finalshell<br>远程连接到游戏服务器虚拟机，并进行管理操作，连接到虚拟机实例，执行命令、查看日志以及监控虚拟机的运行状态，可以方便地进行文件传输和同步、编写脚本来执行自动化任务、定期备份数据，自动化部署新版本等。</p>
-<p>自动化测试：Selenium WebDriver<br>模拟用户操作，自动执行一系列预定义的操作步骤，以验证游戏的功能和性能。这样可以提高测试的效率，减少人工测试所需的时间和工作量。</p>
-<p>性能测试：JMeter<br>用于模拟多个用户同时对游戏服务器进行访问，以评估服务器的承载能力和性能表现。通过生成负载和压力，可以测量响应时间、并发用户数、吞吐量等性能指标，帮助项目确定游戏服务器的性能瓶颈，并进行优化。</p>
-<p>日志分析：如ELK堆栈<br>收集、处理和可视化游戏运行期间产生的大量日志数据。</p>
-<p>虚拟化管理平台：OpenStack<br>用于集中管理和自动部署多个虚拟机实例。<br>1.虚拟环境服务端测试<br>首先，需要针对游戏的服务器端进行虚拟环境测试。在虚拟机中安装相应的服务器操作系统，并按照游戏的需求配置环境。然后，通过在虚拟环境中模拟多个客户端同时连接服务器，进行负载测试和性能测试，以评估服务器的承载能力和稳定性。<br>2.相关操作流程<br>搭建虚拟机环境：在虚拟机软件中创建一个新的虚拟机实例，并为其分配足够的计算资源和存储空间。<br>安装操作系统：在虚拟机实例中安装操作系统，通常是选择一个支持您的游戏运行所需的操作系统版本（如Windows、Linux等）。确保操作系统安装完成后进行必要的系统设置和更新。<br>安装游戏服务端软件：将游戏服务端软件安装到虚拟机实例中。<br>配置网络和端口转发：确保虚拟机实例的网络连接正常，并进行必要的端口转发设置，以便外部客户端可以与游戏服务器进行通信。这通常涉及到在虚拟机软件和网络设备上进行端口映射或端口转发设置。<br>启动游戏服务端：在虚拟机实例中启动游戏服务端，并确保它能够监听正确的端口并接受来自客户端的连接。<br>运行游戏客户端：在外部计算机上运行游戏客户端，并通过网络连接到虚拟机中的游戏服务端。确保客户端和服务端之间可以正常通信，并进行必要的游戏操作和测试。<br>进行测试和故障排除：在运行游戏客户端的同时，测试游戏服务器的各种功能和性能。包括验证玩家之间的互动、数据同步、稳定性等。如果出现问题，需要进行故障排除和调试，以解决可能的错误或性能瓶颈。<br>记录和分析结果：在测试过程中，及时记录测试结果、错误和问题。根据测试结果进行分析，并对游戏服务端进行优化和改进，以提高其性能和稳定性。</p>
-<p>四.个人总结<br>首先，在项目开始之前，我充分认识到了本地游戏运行测试的重要性。通过使用虚拟机（VM）技术，可以模拟不同操作系统环境，确保游戏在各种计算机配置上的正常运行，并评估游戏的性能和稳定性。这为游戏开发人员提供了一个低成本、方便快捷的测试方法。<br>在项目执行过程中，采用了MySQL Workbench作为数据库管理工具，finalshell作为数据监测工具。MySQL Workbench帮助我们设置数据库表结构、索引以及权限控制，实现对游戏数据的有效管理。而finalshell则提供了远程连接到游戏服务器虚拟机的功能，方便我们进行各种管理操作、查看日志和监控虚拟机的运行状态。<br>在搭建虚拟环境服务端时，了解到需要在虚拟机中安装适当的服务器操作系统，并根据游戏需求进行配置。同时，我还学会了进行负载测试和性能测试，以评估游戏服务器的承载能力和稳定性。通过模拟多个客户端同时连接服务器，我能够更准确地了解服务器在不同情况下的表现，并及时发现和解决潜在的问题。<br>整个项目过程中，遇到了一些挑战和问题。例如，在配置网络和端口转发时，需要仔细检查设置以确保外部客户端能够与游戏服务器正常通信。此外，在测试中可能会出现各种错误和性能瓶颈，需要进行故障排除和调试。这些困难让我更深入地理解了虚拟机技术和游戏运行测试的复杂性。<br>通过本次项目，不仅提高了对虚拟机技术的理解和应用能力，还加深了对游戏运行测试的认识。我认识到，只有通过全面而系统的测试，才能确保游戏在用户计算机上的正常运行，并提供良好的游戏体验。这对于游戏开发人员来说至关重要。<br>最后，我感谢团队成员的合作和支持，他们在项目中给予了我很大的帮助和指导。整个项目过程充满了挑战和收获，我相信这次经历将对我的职业发展产生积极的影响。</p>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/%E6%8A%80%E6%9C%AF/" style="color: #ffa2c4">技术</a>
-        </span>
-        
-    </div>
-    <a href="/2023/10/14/VM%E6%9C%AC%E5%9C%B0%E8%99%9A%E6%8B%9F%E6%B8%B8%E6%88%8FGM%E7%9C%9F%E7%AB%AF/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2023/10/10/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E5%80%BE%E5%90%AC%E8%80%85/">
-        <h2 class="post-title">您好，倾听者</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/%E6%97%A5%E5%B8%B8/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                日常
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2023/10/10
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <p>这是我第一次使用博客，我想要把在工作或者生活学习中所遇到的事和心得写在这里，如果有幸您能看到的话，还请多多指教！</p>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/%E4%BA%8C%E6%AC%A1%E5%85%83%E6%97%A5%E5%B8%B8/" style="color: #00bcd4">二次元日常</a>
-        </span>
-        
-    </div>
-    <a href="/2023/10/10/%E4%BD%A0%E5%A5%BD%EF%BC%8C%E5%80%BE%E5%90%AC%E8%80%85/" class="go-post">阅读全文</a>
 </div>
 
 
@@ -961,8 +479,14 @@ class DataBaseHelper (Context:Context,dbName:String=&quot;product.db&quot;):SQLi
     
     <span class="current">1</span>
     
+    <a class="page-num" href="/page/2">2</a>
     
     
+    
+    
+    <a class="page-num" href="/page/2/">
+        <i class="fa-solid fa-caret-right fa-fw"></i>
+    </a>
     
 </div>
 
